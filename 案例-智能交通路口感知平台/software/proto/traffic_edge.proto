@@ -1,0 +1,259 @@
+syntax = "proto3";
+package trafficedge.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.trafficedge.v1";
+
+// ══════════════════════════════════════════════════════════════
+// 管理控制台服务（gRPC）
+// ══════════════════════════════════════════════════════════════
+service TrafficEdge {
+    // 设备状态查询（一次性）
+    rpc GetDeviceStatus(google.protobuf.Empty) returns (DeviceStatus);
+
+    // 实时检测流（Server-Streaming，持续推送检测帧）
+    rpc StreamDetections(StreamRequest) returns (stream DetectionFrame);
+
+    // 历史违规查询
+    rpc QueryViolations(ViolationQuery) returns (ViolationList);
+
+    // 流量统计查询（按时间段）
+    rpc QueryFlowStats(FlowStatsQuery) returns (FlowStatsResponse);
+
+    // 修改配置（双向流，支持批量更新）
+    rpc UpdateConfig(stream ConfigItem) returns (stream ConfigResult);
+
+    // 信号灯手动控制（需管理员权限）
+    rpc ControlSignal(SignalControlRequest) returns (SignalControlResponse);
+
+    // 截图（触发当前帧 JPEG 截图）
+    rpc TriggerCapture(CaptureRequest) returns (CaptureResponse);
+
+    // OTA 升级触发
+    rpc TriggerOTA(OTARequest) returns (stream OTAProgress);
+
+    // 系统命令（重启/重置/日志收集）
+    rpc SystemCommand(SysCmd) returns (SysCmdResult);
+}
+
+// ── 通用消息 ──────────────────────────────────────────────────
+message BoundingBox {
+    uint32 x = 1; uint32 y = 2;
+    uint32 w = 3; uint32 h = 4;
+}
+
+message GeoLocation {
+    double  latitude    = 1;
+    double  longitude   = 2;
+    string  intersection_id = 3;
+}
+
+// ── 设备状态 ──────────────────────────────────────────────────
+message DeviceStatus {
+    string  device_id      = 1;
+    string  firmware_ver   = 2;
+    string  hw_revision    = 3;
+    google.protobuf.Timestamp uptime_since = 4;
+    bool    online         = 5;
+    SystemMetrics system   = 6;
+    repeated ChannelStatus channels = 7;
+    NetworkStatus network  = 8;
+    SignalState   signal   = 9;
+    GeoLocation   location = 10;
+}
+
+message SystemMetrics {
+    float   cpu_a53_pct    = 1;   // ARM A53 CPU 使用率
+    float   mem_used_pct   = 2;
+    float   soc_temp_c     = 3;   // MPSoC 结温
+    float   board_temp_c   = 4;
+    float   dpu_util_pct   = 5;   // DPU 利用率
+    float   infer_fps      = 6;   // 当前推理帧率
+    float   infer_lat_ms   = 7;   // 平均推理延迟
+    uint64  uptime_s       = 8;
+    uint64  total_frames   = 9;
+    uint64  total_events   = 10;
+}
+
+message ChannelStatus {
+    uint32  channel_id     = 1;
+    bool    camera_online  = 2;
+    float   capture_fps    = 3;
+    uint64  frame_drops    = 4;
+    float   queue_length_m = 5;   // 当前排队长度（米）
+    repeated FlowCount counts = 6; // 当前分钟各类别计数
+}
+
+message FlowCount {
+    string class_name = 1;   // car/truck/bus/person/motorcycle/bicycle
+    uint32 count      = 2;
+    float  avg_speed_kmh = 3;
+}
+
+message NetworkStatus {
+    string primary_link    = 1;  // "10gbe" / "4g"
+    uint32 link_speed_mbps = 2;
+    float  latency_ms      = 3;
+    uint64 tx_bytes        = 4;
+    uint64 rx_bytes        = 5;
+    uint32 pending_events  = 6;  // 离线缓存中待上报事件数
+}
+
+message SignalState {
+    string  current_phase  = 1;   // "NS_GREEN" / "NS_YELLOW" etc.
+    uint32  phase_remain_s = 2;   // 当前相位剩余秒数
+    bool    adaptive_mode  = 3;
+    bool    manual_override= 4;
+}
+
+// ── 实时检测流 ────────────────────────────────────────────────
+message StreamRequest {
+    repeated uint32 channels = 1;  // 订阅的通道（空=全部）
+    bool    include_preview  = 2;  // 是否包含 JPEG 预览图
+    float   min_confidence   = 3;  // 过滤置信度
+    float   fps_limit        = 4;  // 限制推送帧率（0=不限）
+}
+
+message DetectionFrame {
+    uint32  channel    = 1;
+    uint32  frame_id   = 2;
+    google.protobuf.Timestamp ts = 3;
+    repeated DetectedObject objects = 4;
+    bytes   preview_jpeg = 5;  // 可选，带框的 JPEG 预览（quality=60）
+    float   infer_lat_ms = 6;
+}
+
+message DetectedObject {
+    uint32  track_id   = 1;
+    uint32  class_id   = 2;
+    string  class_name = 3;
+    float   confidence = 4;
+    BoundingBox bbox   = 5;
+    string  plate      = 6;
+    float   speed_kmh  = 7;
+    bool    is_violation = 8;
+}
+
+// ── 违规查询 ──────────────────────────────────────────────────
+message ViolationQuery {
+    google.protobuf.Timestamp start_time = 1;
+    google.protobuf.Timestamp end_time   = 2;
+    repeated string types     = 3;   // 过滤事件类型
+    repeated uint32 channels  = 4;
+    string  plate_filter      = 5;   // 模糊匹配车牌
+    uint32  page_size         = 6;
+    string  page_token        = 7;
+}
+
+message ViolationEvent {
+    string  event_id   = 1;
+    string  type       = 2;
+    string  plate      = 3;
+    float   confidence = 4;
+    uint32  channel    = 5;
+    google.protobuf.Timestamp ts = 6;
+    string  image_url  = 7;
+    string  video_url  = 8;
+    GeoLocation location = 9;
+    string  signal_state = 10;
+    float   speed_kmh    = 11;
+}
+
+message ViolationList {
+    repeated ViolationEvent violations = 1;
+    uint32  total_count = 2;
+    string  next_page_token = 3;
+}
+
+// ── 流量统计 ──────────────────────────────────────────────────
+message FlowStatsQuery {
+    google.protobuf.Timestamp start_time = 1;
+    google.protobuf.Timestamp end_time   = 2;
+    uint32  granularity_s = 3;  // 统计粒度（60/300/3600）
+    repeated uint32 channels = 4;
+}
+
+message FlowStatsResponse {
+    repeated FlowStatsBucket buckets = 1;
+}
+
+message FlowStatsBucket {
+    google.protobuf.Timestamp bucket_start = 1;
+    uint32  channel   = 2;
+    map<string, uint32> counts  = 3;   // class → count
+    map<string, float>  speeds  = 4;   // class → avg speed
+    float   occupancy_pct       = 5;
+    float   queue_max_m         = 6;
+}
+
+// ── 配置更新 ──────────────────────────────────────────────────
+message ConfigItem {
+    string key   = 1;  // 配置路径，如 "inference.conf_threshold"
+    string value = 2;  // JSON 格式的值
+}
+
+message ConfigResult {
+    string key     = 1;
+    bool   success = 2;
+    string error   = 3;
+}
+
+// ── 信号灯控制 ────────────────────────────────────────────────
+message SignalControlRequest {
+    enum Mode { AUTO = 0; MANUAL_PHASE = 1; ALL_RED = 2; FLASH_YELLOW = 3; }
+    Mode   mode         = 1;
+    string phase        = 2;   // MANUAL_PHASE 时指定相位
+    uint32 duration_s   = 3;   // 持续时间（0=永久直到下一条指令）
+    string operator_id  = 4;   // 操作员 ID（审计日志）
+    string reason       = 5;
+}
+
+message SignalControlResponse {
+    bool   success = 1;
+    string message = 2;
+    SignalState current_state = 3;
+}
+
+// ── 截图 ────────────────────────────────────────────────────
+message CaptureRequest {
+    uint32 channel  = 1;
+    bool   with_boxes = 2;   // 是否叠加检测框
+    uint32 quality  = 3;     // JPEG 质量 1-100
+}
+
+message CaptureResponse {
+    bool  success      = 1;
+    bytes jpeg_data    = 2;
+    uint64 timestamp_us= 3;
+    int32  object_count= 4;
+}
+
+// ── OTA 升级 ─────────────────────────────────────────────────
+message OTARequest {
+    string package_url     = 1;  // 留空则使用默认检查地址
+    string expected_sha256 = 2;
+    bool   force           = 3;  // 跳过版本检查
+}
+
+message OTAProgress {
+    enum Stage { CHECKING=0; DOWNLOADING=1; VERIFYING=2; INSTALLING=3; REBOOTING=4; DONE=5; FAILED=6; }
+    Stage  stage          = 1;
+    float  progress_pct   = 2;
+    string message        = 3;
+    string new_version    = 4;
+}
+
+// ── 系统命令 ────────────────────────────────────────────────
+message SysCmd {
+    enum Type { REBOOT=0; RESET_CONFIG=1; COLLECT_LOGS=2; RUN_DIAG=3; }
+    Type   type       = 1;
+    string operator_id= 2;
+}
+
+message SysCmdResult {
+    bool   success = 1;
+    string output  = 2;  // 命令输出（日志内容等）
+}
