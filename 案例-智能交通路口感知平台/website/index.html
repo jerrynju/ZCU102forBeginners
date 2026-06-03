@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdgeVision-T1 · ZCU102 智能路口感知平台 · 商业化全栈开发案例</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ══ 导航栏 ══════════════════════════════════════════════ -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <span class="chip-icon">⬡</span>
+    <span class="nav-title">EdgeVision-T1</span>
+    <span class="nav-sub">ZCU102 全栈案例</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#flow" class="nav-link active">商业流程</a></li>
+    <li><a href="#arch" class="nav-link">系统架构</a></li>
+    <li><a href="#modules" class="nav-link">技术模块</a></li>
+    <li><a href="#dataflow" class="nav-link">数据流</a></li>
+    <li><a href="#skills" class="nav-link">就业地图</a></li>
+    <li><a href="#resources" class="nav-link">官方资料</a></li>
+  </ul>
+  <div class="nav-status">
+    <span class="status-dot"></span>
+    <span>实时推理中</span>
+  </div>
+</nav>
+
+<!-- ══ Hero ════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg">
+    <canvas id="hero-canvas"></canvas>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">商业级参考案例 · ZCU102 Zynq UltraScale+ MPSoC</div>
+    <h1 class="hero-title">
+      智能交通路口<br>
+      <span class="gradient-text">多模态感知平台</span>
+    </h1>
+    <p class="hero-desc">
+      从需求到量产的完整商业闭环 · 深度学习 + 高速视频 + 实时控制 + 云边协同
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">4K×4</div>
+        <div class="stat-label">路摄像头</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">2.5T</div>
+        <div class="stat-label">AI算力 OPS</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">&lt;22ms</div>
+        <div class="stat-label">推理延迟</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">10GbE</div>
+        <div class="stat-label">云端回传</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <div class="stat-num">&lt;10ms</div>
+        <div class="stat-label">信号灯响应</div>
+      </div>
+    </div>
+    <a href="#flow" class="hero-cta">探索开发流程 ↓</a>
+  </div>
+  <!-- ZCU102 芯片可视化 -->
+  <div class="chip-visual">
+    <div class="chip-container" id="chip3d">
+      <div class="chip-face chip-top">
+        <div class="chip-label">ZCU102</div>
+        <div class="chip-sublabel">xczu9eg-ffvb1156</div>
+        <div class="chip-grid">
+          <div class="chip-block pl-block" title="PL: 274K LUT · 912 BRAM · 2520 DSP">PL<br><small>FPGA逻辑</small></div>
+          <div class="chip-block ps-block" title="PS: A53×4 + R5×2 + Mali GPU">PS<br><small>ARM处理器</small></div>
+          <div class="chip-block ddr-block" title="DDR4: 4GB · 38.4GB/s">DDR4<br><small>4GB</small></div>
+          <div class="chip-block io-block" title="GTH SerDes · MIPI · USB3 · DP">I/O<br><small>SerDes</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 商业闭环流程 ═════════════════════════════════════════ -->
+<section id="flow">
+  <div class="section-header">
+    <div class="section-tag">PHASE 01</div>
+    <h2>商业闭环全流程</h2>
+    <p>以商业交付为终点，九个阶段环环相扣，每阶段可展开查看技术细节</p>
+  </div>
+
+  <div class="flow-timeline" id="flowTimeline"></div>
+
+  <!-- 详情面板 -->
+  <div class="flow-detail" id="flowDetail">
+    <div class="detail-placeholder">
+      <div class="placeholder-icon">👆</div>
+      <p>点击上方任意阶段查看详细内容</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 系统架构 ══════════════════════════════════════════════ -->
+<section id="arch">
+  <div class="section-header">
+    <div class="section-tag">PHASE 02</div>
+    <h2>系统架构全景</h2>
+    <p>PS/PL 异构协同 · 三核并行 · 零拷贝数据通路</p>
+  </div>
+
+  <div class="arch-container">
+    <!-- 左侧：架构图 -->
+    <div class="arch-diagram" id="archDiagram"></div>
+    <!-- 右侧：说明面板 -->
+    <div class="arch-info" id="archInfo">
+      <div class="info-default">
+        <h3>点击架构图中的模块</h3>
+        <p>查看每个子系统的详细说明、关键参数和实现要点</p>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-dot pl-color"></span>PL 逻辑区（FPGA）</div>
+          <div class="legend-item"><span class="legend-dot ps-a53-color"></span>PS A53（Linux）</div>
+          <div class="legend-item"><span class="legend-dot ps-r5-color"></span>PS R5（FreeRTOS）</div>
+          <div class="legend-item"><span class="legend-dot ai-color"></span>AI 推理层</div>
+          <div class="legend-item"><span class="legend-dot cloud-color"></span>云端通信</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 技术模块 ══════════════════════════════════════════════ -->
+<section id="modules">
+  <div class="section-header">
+    <div class="section-tag">PHASE 03</div>
+    <h2>技术模块详解</h2>
+    <p>五大技术层，覆盖全栈开发能力</p>
+  </div>
+
+  <div class="module-tabs">
+    <button class="tab-btn active" data-tab="hw">⬡ FPGA/PL 硬件</button>
+    <button class="tab-btn" data-tab="ai">🧠 AI 推理</button>
+    <button class="tab-btn" data-tab="linux">🐧 嵌入式 Linux</button>
+    <button class="tab-btn" data-tab="rtos">⚡ 实时控制</button>
+    <button class="tab-btn" data-tab="cloud">☁ 云边协同</button>
+  </div>
+
+  <div class="module-content" id="moduleContent"></div>
+</section>
+
+<!-- ══ 数据流动画 ════════════════════════════════════════════ -->
+<section id="dataflow">
+  <div class="section-header">
+    <div class="section-tag">PHASE 04</div>
+    <h2>实时数据流</h2>
+    <p>从摄像头像素到云端报警，全链路数据流可视化</p>
+  </div>
+  <div class="dataflow-container">
+    <canvas id="dataflowCanvas"></canvas>
+    <div class="dataflow-legend" id="dataflowLegend"></div>
+  </div>
+  <div class="dataflow-stats" id="dataflowStats"></div>
+</section>
+
+<!-- ══ 就业技能地图 ══════════════════════════════════════════ -->
+<section id="skills">
+  <div class="section-header">
+    <div class="section-tag">PHASE 05</div>
+    <h2>就业技能覆盖地图</h2>
+    <p>本案例技能覆盖当前 FPGA / 嵌入式 / 边缘 AI 主流岗位需求的 80%+</p>
+  </div>
+
+  <div class="skills-filter">
+    <button class="filter-btn active" data-filter="all">全部</button>
+    <button class="filter-btn" data-filter="fpga">FPGA/硬件</button>
+    <button class="filter-btn" data-filter="linux">嵌入式Linux</button>
+    <button class="filter-btn" data-filter="ai">AI/算法</button>
+    <button class="filter-btn" data-filter="system">系统架构</button>
+  </div>
+
+  <div class="skills-grid" id="skillsGrid"></div>
+
+  <div class="salary-banner">
+    <div class="salary-item">
+      <div class="salary-role">FPGA 工程师</div>
+      <div class="salary-range">¥20K – ¥45K / 月</div>
+      <div class="salary-bar"><div class="salary-fill" style="width:75%"></div></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-role">嵌入式 Linux 工程师</div>
+      <div class="salary-range">¥18K – ¥40K / 月</div>
+      <div class="salary-bar"><div class="salary-fill" style="width:70%"></div></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-role">边缘 AI 工程师</div>
+      <div class="salary-range">¥25K – ¥55K / 月</div>
+      <div class="salary-bar"><div class="salary-fill" style="width:88%"></div></div>
+    </div>
+    <div class="salary-item">
+      <div class="salary-role">系统架构师</div>
+      <div class="salary-range">¥35K – ¥80K / 月</div>
+      <div class="salary-bar"><div class="salary-fill" style="width:95%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 官方资料库 ════════════════════════════════════════════ -->
+<section id="resources">
+  <div class="section-header">
+    <div class="section-tag">PHASE 06</div>
+    <h2>官方文档资料库</h2>
+    <p>精选 AMD Xilinx 官方手册 · 按技术层分类整理</p>
+  </div>
+
+  <div class="resources-filter">
+    <button class="res-btn active" data-res="all">全部</button>
+    <button class="res-btn" data-res="board">开发板</button>
+    <button class="res-btn" data-res="fpga">FPGA/HLS</button>
+    <button class="res-btn" data-res="linux">Linux/BSP</button>
+    <button class="res-btn" data-res="ai">AI/DPU</button>
+    <button class="res-btn" data-res="ip">IP核</button>
+    <button class="res-btn" data-res="algo">算法</button>
+  </div>
+
+  <div class="resources-grid" id="resourcesGrid"></div>
+</section>
+
+<!-- ══ Footer ════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-content">
+    <div class="footer-left">
+      <div class="footer-logo">⬡ EdgeVision-T1</div>
+      <p>基于 Xilinx ZCU102 的商业级全栈参考案例</p>
+      <p class="footer-note">工具链：Vivado 2023.1 · Vitis AI 3.5 · PetaLinux 2023.1</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <div class="footer-col-title">硬件层</div>
+        <a href="#arch">系统架构</a>
+        <a href="#modules">FPGA/PL</a>
+        <a href="#modules">HLS IP</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">软件层</div>
+        <a href="#modules">PetaLinux</a>
+        <a href="#modules">Linux 驱动</a>
+        <a href="#modules">FreeRTOS</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">AI 层</div>
+        <a href="#modules">YOLOv8</a>
+        <a href="#modules">Vitis AI</a>
+        <a href="#modules">DPU 部署</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 ZCU102forBeginners · 教育用途</span>
+    <span>AMD Xilinx ZCU102 商业化全栈案例</span>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/diagram.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
