@@ -1,0 +1,40 @@
+# Release 流程
+release:
+  # 版本号规范：MAJOR.MINOR.PATCH
+  # - MAJOR: 不兼容 API 变更
+  # - MINOR: 向后兼容功能新增
+  # - PATCH: 向后兼容问题修复
+  version_format: semver
+
+  # 候选版本
+  rc:
+    - rc1
+    - rc2
+
+  # 发布渠道
+  channels:
+    stable: 1.0.0
+    beta:   1.1.0-beta.1
+    internal: 1.2.0-internal.3
+
+  # 签名
+  sign:
+    enabled: true
+    tool: cosign
+    keyless: true
+    oidc_issuer: https://token.actions.githubusercontent.com
+
+  # OTA 包
+  ota:
+    tool: swupdate
+    compression: zstd
+    swu_pattern: edgevision-t1-{version}.swu
+    description: |
+      A/B 分区升级。
+      升级失败自动回滚。
+      包含：boot.bin (FSBL+ATF+U-Boot+bitstream+R5 fw) + rootfs (kernel+app) + r5_fw + models
+
+  # Changelog
+  changelog:
+    source: core/00_MANIFEST/CHANGELOG.md
+    github_release: true

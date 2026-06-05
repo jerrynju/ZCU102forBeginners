@@ -1,0 +1,66 @@
+# ──── 文本文件统一 LF ──────────────────────────────────
+*.md          text eol=lf
+*.markdown    text eol=lf
+*.txt         text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.json        text eol=lf
+*.proto       text eol=lf
+*.tcl         text eol=lf
+*.sh          text eol=lf
+*.py          text eol=lf
+*.pyx         text eol=lf
+*.cpp         text eol=lf
+*.c           text eol=lf
+*.cc          text eol=lf
+*.h           text eol=lf
+*.hpp         text eol=lf
+*.hxx         text eol=lf
+*.v           text eol=lf
+*.vh          text eol=lf
+*.sv          text eol=lf
+*.svh         text eol=lf
+*.vhd         text eol=lf
+*.xdc         text eol=lf
+*.ucf         text eol=lf
+*.do          text eol=lf
+*.html        text eol=lf
+*.htm         text eol=lf
+*.css         text eol=lf
+*.js          text eol=lf
+*.vue         text eol=lf
+*.ts          text eol=lf
+*.java        text eol=lf
+*.go          text eol=lf
+*.rs          text eol=lf
+
+# ──── LFS（Git LFS 启用时）─────────────────────────────
+*.xmodel      filter=lfs diff=lfs merge=lfs -text
+*.bit         filter=lfs diff=lfs merge=lfs -text
+*.xsa         filter=lfs diff=lfs merge=lfs -text
+*.bin         filter=lfs diff=lfs merge=lfs -text
+*.elf         filter=lfs diff=lfs merge=lfs -text
+*.hex         filter=lfs diff=lfs merge=lfs -text
+*.itb         filter=lfs diff=lfs merge=lfs -text
+*.img         filter=lfs diff=lfs merge=lfs -text
+*.wic         filter=lfs diff=lfs merge=lfs -text
+*.dtb         filter=lfs diff=lfs merge=lfs -text
+*.pb          filter=lfs diff=lfs merge=lfs -text
+*.onnx        filter=lfs diff=lfs merge=lfs -text
+*.pt          filter=lfs diff=lfs merge=lfs -text
+*.pth         filter=lfs diff=lfs merge=lfs -text
+*.h5          filter=lfs diff=lfs merge=lfs -text
+*.hdf5        filter=lfs diff=lfs merge=lfs -text
+*.tflite      filter=lfs diff=lfs merge=lfs -text
+*.dla         filter=lfs diff=lfs merge=lfs -text
+*.xclbin      filter=lfs diff=lfs merge=lfs -text
+*.tar         filter=lfs diff=lfs merge=lfs -text
+*.tar.gz      filter=lfs diff=lfs merge=lfs -text
+*.zip         filter=lfs diff=lfs merge=lfs -text
+*.swu         filter=lfs diff=lfs merge=lfs -text
+*.pdf         filter=lfs diff=lfs merge=lfs -text
+*.png         filter=lfs diff=lfs merge=lfs -text
+*.jpg         filter=lfs diff=lfs merge=lfs -text
+*.jpeg        filter=lfs diff=lfs merge=lfs -text
+*.gif         filter=lfs diff=lfs merge=lfs -text
+*.mp4         filter=lfs diff=lfs merge=lfs -text

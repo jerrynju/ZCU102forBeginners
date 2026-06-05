@@ -1,24 +1,93 @@
+# ──── 核心部分（core/）──────────────────────────────────
+core/00_MANIFEST/INDEX.md        # 工具流自动生成
+core/00_MANIFEST/traceability.yml
+core/03_ALGORITHM/simulation/results/
+core/03_ALGORITHM/simulation/figures/
+core/05_VERIFICATION/reports/*.html
+core/05_VERIFICATION/coverage/*.dat
+core/05_VERIFICATION/coverage/*.xml
+
+# ──── 构建产物 ──────────────────────────────────────────
+core/04_IMPLEMENTATION/c/build/
+core/04_IMPLEMENTATION/c/src/app/build/
+core/04_IMPLEMENTATION/rtos/build/
+core/04_IMPLEMENTATION/rtos/src/build/
+
+# ──── Vivado ────────────────────────────────────────────
+core/04_IMPLEMENTATION/verilog/vivado_project/build/
+core/04_IMPLEMENTATION/verilog/vivado_project/*.runs/
+core/04_IMPLEMENTATION/verilog/vivado_project/*.cache/
+core/04_IMPLEMENTATION/verilog/vivado_project/*.hw/
+core/04_IMPLEMENTATION/verilog/vivado_project/*.sim/
+core/04_IMPLEMENTATION/verilog/vivado_project/*.bit
+core/04_IMPLEMENTATION/verilog/vivado_project/*.xsa
+core/04_IMPLEMENTATION/verilog/vivado_project/*.xpr
+.Xil/
+*.jou
+*.log
+_xocc_*
+vitis_hls.log
+
+# ──── Vitis HLS ─────────────────────────────────────────
+core/04_IMPLEMENTATION/hls/**/solution*/.autopilot/
+core/04_IMPLEMENTATION/hls/**/solution*/syn/
+core/04_IMPLEMENTATION/hls/**/solution*/sim/
+core/04_IMPLEMENTATION/hls/**/solution*/impl/
+
+# ──── AI 模型 / 训练 ────────────────────────────────────
+core/04_IMPLEMENTATION/ai/train/runs/
+core/04_IMPLEMENTATION/ai/train/weights/
+core/04_IMPLEMENTATION/ai/quantization/quantized/
+core/04_IMPLEMENTATION/ai/deploy/*.xmodel
+core/04_IMPLEMENTATION/ai/deploy/*.pb
+core/04_IMPLEMENTATION/ai/deploy/*.onnx
+core/04_IMPLEMENTATION/ai/deploy/*.pt
+
+# ──── PetaLinux ─────────────────────────────────────────
+core/06_INTEGRATION/deployment/petalinux/build/
+core/06_INTEGRATION/deployment/petalinux/images/
+
+# ──── OTA / Release ─────────────────────────────────────
+core/06_INTEGRATION/releases/*.swu
+core/06_INTEGRATION/releases/*.tar.gz
+
+# ──── 工具流自身 ────────────────────────────────────────
+tools/.venv/
+tools/build/
+tools/dist/
+tools/*.egg-info/
+
+# ──── Python ────────────────────────────────────────────
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
-.Python
-*.egg-info/
-dist/
-build/
+*$py.class
 *.so
-*.a
-*.o
-*.d
-*.elf
-*.bit
-*.xsa
-*.xclbin
-.Xil/
-_xocc_*
-*.log
-*.jou
-/tmp/sim_*.jpg
-/tmp/mosquitto_sim.*
-*.db
-*.sqlite
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ──── Node / Web ────────────────────────────────────────
+core/04_IMPLEMENTATION/bindings/web/node_modules/
+core/04_IMPLEMENTATION/bindings/web/dist/
+core/04_IMPLEMENTATION/bindings/web/.cache/
+
+# ──── 编辑器 / IDE ──────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ──── 临时 ──────────────────────────────────────────────
+/tmp/
+*.tmp
+*.bak
+*.orig

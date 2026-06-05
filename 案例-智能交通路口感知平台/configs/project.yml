@@ -1,0 +1,15 @@
+project:
+  name: edgevision-t1
+  version: 1.0.0
+  description: 智能交通路口感知终端
+  repository: https://github.com/edgevision/edgevision-t1
+  homepage: https://edgevision.example.com
+  maintainers:
+    - name: 架构组
+      email: architect@edgevision.example.com
+    - name: 算法组
+      email: ai@edgevision.example.com
+    - name: 硬件组
+      email: hw@edgevision.example.com
+  license: Apache-2.0
+  keywords: [edge-ai, traffic, mpsoc, zcu102, yolov8, bytetrack, lprnet]

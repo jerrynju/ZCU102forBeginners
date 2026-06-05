@@ -1,0 +1,113 @@
+project:
+  name: edgevision-t1
+  core_root: core
+  version: 1.0.0
+
+toolchains:
+  # ── MATLAB / Simulink 仿真（可选） ──────────────────────
+  matlab:
+    enabled: false
+    version: "R2023b"
+    command: matlab
+    license_server: 27000@licsrv
+    notes: |
+      启用后用 MATLAB 做算法仿真，脚本见 03_ALGORITHM/simulation/src/。
+      当前项目采用 Python 仿真（OpenCV + numpy），MATLAB 适配可选。
+
+  # ── C/C++ 编译 ─────────────────────────────────────────
+  c_build:
+    enabled: true
+    compiler: gcc
+    standard: c17
+    cxx_standard: c++17
+    flags:
+      debug:   ["-O0", "-g3", "-Wall", "-Wextra", "-Wpedantic"]
+      release: ["-O2", "-DNDEBUG", "-Wall"]
+    coverage_tool: gcov
+    sanitizer: asan
+    cmake_version: "3.22"
+
+  # ── AI 模型训练 / 量化 / 部署 ─────────────────────────
+  ai:
+    enabled: true
+    framework: pytorch
+    version: "2.1"
+    yolo_repo: ultralytics
+    quantizer: vitis_ai
+    quantizer_version: "3.5"
+    target: DPUCZDX8G
+    dpu_arch: B4096
+    device: xczu9eg
+
+  # ── HLS 综合（Xilinx Vitis HLS） ──────────────────────
+  hls:
+    enabled: true
+    tool: vitis_hls
+    version: "2023.1"
+    part: xczu9eg-ffvb1156-2-e
+    clock_250mhz: true
+    pipelines: [isp_pipeline, osd_overlay]
+
+  # ── HDL 仿真 ───────────────────────────────────────────
+  hdl_sim:
+    enabled: true
+    simulator: verilator
+    fallback: [modelsim, vivado-xsim]
+    version: "5.020"
+    coverage: true
+
+  # ── FPGA 综合 / 实现 ──────────────────────────────────
+  fpga_synth:
+    enabled: true
+    tool: vivado
+    version: "2023.1"
+    part: xczu9eg-ffvb1156-2-e
+    top_module: ofdm_modem_top
+    strategy: performance_exploratory
+    jobs: 8
+
+  # ── PetaLinux 集成 ─────────────────────────────────────
+  petalinux:
+    enabled: true
+    version: "2023.1"
+    bsp: zcu102_2023_1.bsp
+    rootfs: petalinux-user-image
+    packages:
+      - mqtt
+      - libmosquitto-dev
+      - protobuf
+      - libgrpc++-dev
+      - libsqlite3-dev
+      - libssl-dev
+      - libcurl4-openssl-dev
+
+  # ── 实时子系统 ─────────────────────────────────────────
+  rtos:
+    enabled: true
+    rtos: freertos
+    version: "10.4.0-lts"
+    core: r5
+    bsp: freertos_tcp_2023_1
+
+  # ── 测试 / CI ─────────────────────────────────────────
+  ci:
+    enabled: true
+    runner: github
+    matrix: [ubuntu-22.04]
+    cache: true
+    on_push:   [validate, build:c, sim:hdl]
+    on_pr:     [full_verify]
+    nightly:   [regression, long-soak]
+    artifacts:
+      - name: build
+        path: core/04_IMPLEMENTATION/c/build/
+      - name: reports
+        path: core/05_VERIFICATION/reports/
+
+  # ── 部署 / OTA ────────────────────────────────────────
+  release:
+    enabled: true
+    ota_tool: swupdate
+    ota_channel: [stable, beta, internal]
+    sign_tool: cosign
+    cosign_key: oci://harbor.example.com/edgevision/keys

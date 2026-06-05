@@ -1,0 +1,200 @@
+---
+id: requirements.yml
+title: 需求库（结构化）
+type: manifest-data
+status: active
+version: 1.0.0
+updated: 2026-06-04
+---
+
+# 需求库
+
+> 此文件为 `core/01_REQUIREMENTS/` 下所有需求文档的结构化投影。  
+> 由 `tools/sw_hw_toolflow/core/build_traceability.py` 扫描 front-matter 自动生成。  
+> 手工修改会被下次扫描覆盖。
+
+```yaml
+schema_version: "1.0"
+generated_at: "2026-06-04T00:00:00Z"
+generator: "tools/sw_hw_toolflow/core/build_traceability.py"
+source_root: "core/01_REQUIREMENTS"
+
+stakeholder_requirements:
+  - id: STK-REQ-001
+    title: "城市路口违章检测全覆盖"
+    owner: customer-success
+    priority: P0
+    status: approved
+    source: core/01_REQUIREMENTS/stakeholder/STK-REQ-001-violation-coverage.md
+    derived_to: [SYS-REQ-002, SYS-REQ-003, SYS-REQ-005, SYS-REQ-006]
+
+  - id: STK-REQ-002
+    title: "24 小时无人值守运行"
+    owner: customer-success
+    priority: P0
+    status: approved
+    source: core/01_REQUIREMENTS/stakeholder/STK-REQ-002-24x7-operation.md
+    derived_to: [SAF-REQ-001, SAF-REQ-002, SYS-REQ-009, SYS-REQ-010]
+
+  - id: STK-REQ-003
+    title: "与现有信号灯系统兼容"
+    owner: integration
+    priority: P0
+    status: approved
+    source: core/01_REQUIREMENTS/stakeholder/STK-REQ-003-signal-compat.md
+    derived_to: [IF-REQ-003, SYS-REQ-006, DES-ARCH-005]
+
+  - id: STK-REQ-004
+    title: "数据上报云平台做大数据分析"
+    owner: data-platform
+    priority: P0
+    status: approved
+    source: core/01_REQUIREMENTS/stakeholder/STK-REQ-004-cloud-report.md
+    derived_to: [SYS-REQ-007, ICD-003, SAF-REQ-004]
+
+system_requirements:
+  - id: SYS-REQ-001
+    title: "4 路 4K@30fps 视频同步接入"
+    priority: P0
+    status: verified
+    source: core/01_REQUIREMENTS/system/SYS-REQ-001-multi-cam.md
+    derived_from: [STK-REQ-001]
+    verification_method: integration_test
+    verification_ref: TC-CAM-001
+    design_ref: [DES-ARCH-001, DES-ARCH-007]
+    impl_ref: [MOD-C-FRAME-MGR, MOD-HLS-ISP]
+
+  - id: SYS-REQ-002
+    title: "车辆/行人检测 mAP50 > 85%"
+    priority: P0
+    status: verified
+    source: core/01_REQUIREMENTS/system/SYS-REQ-002-detection-accuracy.md
+    derived_from: [STK-REQ-001]
+    metrics: { mAP50_min: 0.85 }
+    verification_method: benchmark
+    verification_ref: TC-AI-DET-001
+    design_ref: [DES-ARCH-008, TR-003]
+    impl_ref: [MOD-AI-YOLOV8S, MOD-C-INFER]
+
+  - id: SYS-REQ-003
+    title: "车牌识别准确率 > 95%"
+    priority: P0
+    status: verified
+    source: core/01_REQUIREMENTS/system/SYS-REQ-003-lpr-accuracy.md
+    derived_from: [STK-REQ-001]
+    metrics: { accuracy_min: 0.95, latency_max_ms: 50 }
+    verification_method: benchmark
+    verification_ref: TC-AI-LPR-001
+    design_ref: [DES-ARCH-008]
+    impl_ref: [MOD-AI-LPRNET, MOD-C-INFER]
+
+  - id: SYS-REQ-004
+    title: "多目标跟踪 MOTA > 75%"
+    priority: P0
+    status: verified
+    source: core/01_REQUIREMENTS/system/SYS-REQ-004-tracking-mota.md
+    derived_from: [STK-REQ-001]
+    metrics: { MOTA_min: 0.75 }
+    verification_method: benchmark
+    verification_ref: TC-TRACK-001
+    design_ref: [DES-ARCH-008]
+    impl_ref: [MOD-C-TRACK]
+
+  - id: SYS-REQ-005
+    title: "流量统计精度 > 95%"
+    priority: P0
+    status: approved
+    source: core/01_REQUIREMENTS/system/SYS-REQ-005-flow-accuracy.md
+    derived_from: [STK-REQ-001]
+    metrics: { accuracy_min: 0.95 }
+    verification_method: integration_test
+    verification_ref: TC-FLOW-001
+    design_ref: [DES-ARCH-008]
+    impl_ref: [MOD-C-TRACK, MOD-C-EVENT]
+
+  - id: SYS-REQ-006
+    title: "信号灯联动控制 < 10ms"
+    priority: P1
+    status: approved
+    source: core/01_REQUIREMENTS/system/SYS-REQ-006-signal-latency.md
+    derived_from: [STK-REQ-003]
+    metrics: { latency_max_ms: 10 }
+    verification_method: timing_analysis
+    verification_ref: TC-CAN-LATENCY
+    design_ref: [DES-ARCH-005, DES-ARCH-006]
+    impl_ref: [TASK-SIG-FSM, TASK-CAN-RX]
+
+  - id: SYS-REQ-007
+    title: "云端上报 < 500ms"
+    priority: P0
+    status: verified
+    source: core/01_REQUIREMENTS/system/SYS-REQ-007-cloud-latency.md
+    derived_from: [STK-REQ-004]
+    metrics: { latency_max_ms: 500, qos: 1, tls: true }
+    verification_method: integration_test
+    verification_ref: TC-CLOUD-001
+    design_ref: [DES-ARCH-010, ICD-003]
+    impl_ref: [MOD-C-CLOUD, MOD-C-OFFLINE]
+
+  - id: SYS-REQ-008
+    title: "安全启动链"
+    priority: P0
+    status: verified
+    source: core/01_REQUIREMENTS/system/SYS-REQ-008-secure-boot.md
+    derived_from: [STK-REQ-002]
+    verification_method: inspection
+    verification_ref: TC-SEC-001
+    design_ref: [DES-ARCH-001]
+
+  - id: SYS-REQ-009
+    title: "OTA 远程升级"
+    priority: P1
+    status: approved
+    source: core/01_REQUIREMENTS/system/SYS-REQ-009-ota.md
+    derived_from: [STK-REQ-002]
+    verification_method: integration_test
+    verification_ref: TC-OTA-001
+    design_ref: [DES-ARCH-010]
+    impl_ref: [MOD-C-OTA]
+
+  - id: SYS-REQ-010
+    title: "离线工作 24h"
+    priority: P1
+    status: approved
+    source: core/01_REQUIREMENTS/system/SYS-REQ-010-offline-24h.md
+    derived_from: [STK-REQ-002]
+    metrics: { storage_min_h: 24 }
+    verification_method: endurance_test
+    verification_ref: TC-OFFLINE-24H
+    design_ref: [DES-ARCH-010]
+    impl_ref: [MOD-C-OFFLINE]
+
+interface_requirements:
+  - { id: IF-REQ-001, title: "MIPI CSI-2 4 lane",  status: approved }
+  - { id: IF-REQ-002, title: "10GbE SFP+",         status: approved }
+  - { id: IF-REQ-003, title: "CAN 2.0B",           status: approved }
+  - { id: IF-REQ-004, title: "USB3.0 UVC",         status: approved }
+  - { id: IF-REQ-005, title: "DisplayPort 1.2",     status: approved }
+  - { id: IF-REQ-006, title: "GPS PPS",            status: approved }
+
+performance_requirements:
+  - { id: PERF-REQ-001, title: "端到端 < 30ms/帧",   status: approved }
+  - { id: PERF-REQ-002, title: "整机功耗 < 35W",     status: approved }
+  - { id: PERF-REQ-003, title: "启动时间 < 15s",     status: approved }
+  - { id: PERF-REQ-004, title: "DPU ≥ 2.5 TOPS",    status: approved }
+  - { id: PERF-REQ-005, title: "DDR4 ≥ 30 GB/s",    status: approved }
+
+safety_requirements:
+  - { id: SAF-REQ-001, title: "安全启动 RSA-4096",    status: verified }
+  - { id: SAF-REQ-002, title: "A53→R5 看门狗心跳",    status: approved }
+  - { id: SAF-REQ-003, title: "信号灯安全模式",        status: approved }
+  - { id: SAF-REQ-004, title: "mTLS 双向认证",         status: approved }
+  - { id: SAF-REQ-005, title: "掉电数据不丢失",         status: approved }
+  - { id: SAF-REQ-006, title: "工作温度 -20~+70°C",   status: approved }
+  - { id: SAF-REQ-007, title: "MTBF > 50,000h",       status: approved }
+
+verification_policies:
+  - { id: VP-001, title: "闭环仿真验证",  status: approved }
+  - { id: VP-002, title: "DPU 实机验证",  status: approved }
+  - { id: VP-003, title: "工厂量产测试",  status: approved }
+```

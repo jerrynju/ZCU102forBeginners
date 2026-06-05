@@ -1,0 +1,38 @@
+# CI 平台选择
+ci:
+  platform: github
+  cache: true
+  timeout_min: 60
+  retry: 1
+
+# PR 触发
+on_pr:
+  - validate     # 追溯、链接、ID 校验
+  - build:c      # C/C++ 编译
+  - sim:hdl      # HDL 仿真
+  - test:unit    # 单元测试
+  - test:sim     # 闭环仿真
+
+# Push 触发
+on_push:
+  - validate
+  - build:c
+  - build:hls    # HLS 综合
+  - build:rtos   # R5 FreeRTOS 编译
+  - sim:hdl
+  - test:integration
+  - test:sim
+  - report:coverage
+
+# Tag 触发
+on_tag:
+  - build:release
+  - ota:build
+  - ota:sign
+  - ota:upload
+
+# 定时任务
+nightly:
+  - regression
+  - long-soak
+  - lpr-night

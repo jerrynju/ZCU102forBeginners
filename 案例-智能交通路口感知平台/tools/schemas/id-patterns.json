@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "patterns": {
+    "stakeholder_requirement":  "^STK-REQ-\\d{3}$",
+    "system_requirement":        "^SYS-REQ-\\d{3}$",
+    "interface_requirement":     "^IF-REQ-\\d{3}$",
+    "performance_requirement":   "^PERF-REQ-\\d{3}$",
+    "safety_requirement":        "^SAF-REQ-\\d{3}$",
+    "regulatory_requirement":    "^REG-REQ-\\d{3}$",
+    "design_architecture":       "^DES-ARCH-\\d{3}$",
+    "icd":                       "^ICD-\\d{3}$",
+    "trade_study":               "^TR-\\d{3}$",
+    "concept_of_ops":            "^CON-OP-\\d{3}$",
+    "algorithm_theory":          "^ALG-TH-\\w+-\\d{3}$",
+    "algorithm_implementation":  "^ALG-\\w+-\\d{3}$",
+    "module_c":                  "^MOD-C-\\w+-\\d{2,}$",
+    "module_rtl":                "^MOD-RTL-\\w+$",
+    "module_tb":                 "^MOD-TB-\\w+$",
+    "module_hls":                "^MOD-HLS-\\w+$",
+    "module_ai":                 "^MOD-AI-\\w+$",
+    "task":                      "^TASK-\\w+-\\w+$",
+    "test_case":                 "^TC-[A-Z0-9-]+-\\d{3}$",
+    "test_plan":                 "^TP-\\d{4}-Q[1-4]$",
+    "test_report":               "^TR-REP-\\d{4}-Q[1-4]$",
+    "verification_policy":       "^VP-\\d{3}$",
+    "adr":                       "^ADR-\\d{3}$",
+    "issue":                     "^ISS-\\d{3}$",
+    "metric":                    "^METRIC-\\w+-\\d{3}$"
+  },
+  "statuses": [
+    "draft", "reviewed", "approved", "verified",
+    "rejected", "deferred", "deprecated",
+    "open", "triaged", "in-progress", "resolved", "closed",
+    "active", "pending", "passed", "failed",
+    "accepted", "proposed", "superseded"
+  ]
+}

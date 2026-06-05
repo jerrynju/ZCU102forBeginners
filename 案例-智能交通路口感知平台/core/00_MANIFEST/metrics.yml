@@ -1,0 +1,77 @@
+---
+id: metrics.yml
+title: 项目度量
+type: metrics
+status: active
+version: 1.0.0
+updated: 2026-06-04
+---
+
+# 项目度量
+
+```yaml
+schema_version: "1.0"
+generated_at: "2026-06-04T00:00:00Z"
+
+# ── 需求健康度 ──────────────────────────────────────────
+requirements:
+  total: 33                  # 含 STK/SYS/IF/PERF/SAF/REG
+  approved: 33
+  verified: 12
+  verification_rate_pct: 36  # verified / approved
+  implementation_rate_pct: 100
+  changes_last_30d: 0
+  stability_pct: 100         # 未变更 / 总需求
+
+# ── 追溯健康度 ──────────────────────────────────────────
+traceability:
+  total_links: 10            # 顶级 SYS-REQ 链接
+  orphan_code_count: 0
+  orphan_design_count: 0
+  circular_dependencies: 0
+
+# ── 代码健康度 ──────────────────────────────────────────
+code:
+  c_loc: ~1500               # C/C++ 估算
+  hls_loc: ~600              # HLS C++ 估算
+  rtos_loc: ~400             # R5 FreeRTOS 估算
+  python_sim_loc: ~1200      # 算法仿真估算
+  test_loc: ~300
+
+# ── 验证健康度 ──────────────────────────────────────────
+verification:
+  test_cases_total: 8
+  test_cases_passed: 6
+  test_cases_pending: 2
+  pass_rate_pct: 75
+  code_coverage_pct: ~65     # 由 gcov/verilator 统计
+
+# ── 黄金参考健康度 ──────────────────────────────────────
+golden_reference:
+  drift_count_30d: 0
+  drift_count_total: 0
+  last_refresh: 2026-06-04
+
+# ── 问题/决策 ──────────────────────────────────────────
+feedback:
+  open_issues: 0
+  closed_issues: 0
+  adr_total: 3
+  retrospectives_total: 0
+
+# ── 部署健康度 ──────────────────────────────────────────
+delivery:
+  release_count: 0
+  ota_success_rate_pct: null
+  mttr_hours: null
+
+# ── 性能基线 ──────────────────────────────────────────
+performance_baseline:
+  end_to_end_latency_ms: 22        # 4 路并行，含 ISP+推理+跟踪
+  detection_mAP50_pct: 88.5        # YOLOv8s INT8
+  lpr_accuracy_pct: 95.3           # LPRNet INT8
+  tracking_MOTA_pct: 76.2          # ByteTrack
+  power_w: 28                      # 实测
+  startup_s: 12                    # 实测
+  dpu_util_pct: 78                 # 实测
+```

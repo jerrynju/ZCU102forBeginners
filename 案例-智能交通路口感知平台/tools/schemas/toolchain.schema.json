@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Toolchain Configuration",
+  "description": "项目级工具链映射，由 sw_hw_toolflow 读取",
+  "type": "object",
+  "required": ["project", "toolchains"],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["name", "core_root"],
+      "properties": {
+        "name":      { "type": "string" },
+        "core_root": { "type": "string", "default": "core" }
+      }
+    },
+    "toolchains": {
+      "type": "object",
+      "properties": {
+        "matlab":       { "type": "object" },
+        "matlab_coder": { "type": "object" },
+        "hdl_coder":    { "type": "object" },
+        "hdl_sim":      { "type": "object" },
+        "c_build":      { "type": "object" },
+        "ai":           { "type": "object" },
+        "fpga_synth":   { "type": "object" },
+        "rtos":         { "type": "object" },
+        "ci":           { "type": "object" }
+      }
+    }
+  }
+}
