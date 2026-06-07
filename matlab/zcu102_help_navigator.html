@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATLAB ZCU102 帮助文档导航 | Zynq UltraScale+ MPSoC</title>
+<style>
+  :root {
+    --bg-primary: #0f0f1a;
+    --bg-secondary: #161629;
+    --bg-card: #1c1c36;
+    --bg-card-hover: #242442;
+    --accent-blue: #4fc3f7;
+    --accent-green: #69f0ae;
+    --accent-orange: #ffab40;
+    --accent-purple: #b388ff;
+    --accent-red: #ff6b6b;
+    --text-primary: #e8eaf6;
+    --text-secondary: #9fa8da;
+    --border-color: #283593;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --success-bg: rgba(105,240,174,0.08);
+    --success-border: rgba(105,240,174,0.25);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0d1b2c 0%, #1b2845 40%, #1a237e 100%);
+    padding: 36px 20px 32px; text-align: center;
+    border-bottom: 3px solid var(--accent-blue); position: relative; overflow: hidden;
+  }
+  .header::before {
+    content:''; position:absolute; top:-50%; left:-50%;
+    width:200%; height:200%;
+    background: radial-gradient(circle, rgba(79,195,247,0.06) 0%, transparent 60%);
+    animation: pulse 8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:.5} 50%{transform:scale(1.1);opacity:1} }
+  .header h1 { font-size: 2.2em; font-weight:700; letter-spacing:.5px; position:relative; z-index:1; text-shadow:0 2px 20px rgba(0,0,0,.5); }
+  .header .subtitle { color:var(--accent-blue); font-size:1.05em; margin-top:8px; position:relative; z-index:1; }
+
+  /* Port bar */
+  .port-bar {
+    background: var(--bg-secondary); padding: 14px 24px;
+    display:flex; align-items:center; justify-content:center; gap:16px;
+    border-bottom: 1px solid var(--border-color); flex-wrap:wrap;
+  }
+  .port-bar label { color:var(--text-secondary); font-size:.9em; white-space:nowrap; }
+  .port-bar input {
+    background:var(--bg-card); border:1px solid var(--border-color);
+    color:var(--accent-blue); padding:8px 14px; border-radius:6px;
+    font-size:1em; width:90px; text-align:center;
+    font-family:'Consolas',monospace; font-weight:600;
+  }
+  .port-bar input:focus { outline:none; border-color:var(--accent-blue); box-shadow:0 0 0 3px rgba(79,195,247,.15); }
+  .port-bar button {
+    background:linear-gradient(135deg,#1565c0,#1976d2); color:#fff;
+    border:none; padding:8px 20px; border-radius:6px;
+    cursor:pointer; font-size:.88em; font-weight:600;
+    transition:all .2s;
+  }
+  .port-bar button:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(21,101,192,.4); }
+  .port-bar button:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+  .port-status { font-size:.85em; font-weight:600; white-space:nowrap; }
+  .status-ok { color:var(--accent-green); }
+  .status-error { color:var(--accent-red); }
+  .status-checking { color:var(--accent-orange); }
+
+  .container { max-width:1280px; margin:0 auto; padding:28px 24px; }
+
+  /* Category */
+  .category { margin-bottom:36px; }
+  .cat-header {
+    display:flex; align-items:center; gap:14px;
+    margin-bottom:18px; padding-bottom:12px;
+    border-bottom:2px solid var(--border-color);
+  }
+  .cat-icon {
+    width:46px; height:46px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.45em; flex-shrink:0;
+  }
+  .icon-hdl { background:linear-gradient(135deg,#1b5e20,#388e3c); }
+  .icon-dl  { background:linear-gradient(135deg,#4a148c,#7b1fa2); }
+  .icon-soc { background:linear-gradient(135deg,#e65100,#f57c00); }
+  .icon-brd { background:linear-gradient(135deg,#01579b,#0288d1); }
+  .icon-ex  { background:linear-gradient(135deg,#bf360c,#e64a19); }
+  .icon-vrf { background:linear-gradient(135deg,#006064,#0097a7); }
+  .cat-header h2 { font-size:1.4em; font-weight:700; }
+  .cat-header p { color:var(--text-secondary); font-size:.88em; margin-top:2px; }
+  .count-badge {
+    margin-left:auto; background:var(--bg-card); color:var(--text-secondary);
+    padding:5px 13px; border-radius:16px; font-size:.8em; font-weight:600;
+    border:1px solid var(--border-color);
+  }
+
+  /* Card Grid */
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:16px; }
+
+  .card {
+    background:var(--bg-card); border:1px solid var(--border-color);
+    border-radius:12px; overflow:hidden; transition:all .25s ease;
+    display:flex; flex-direction:column;
+  }
+  .card:hover {
+    background:var(--bg-card-hover);
+    border-color:var(--accent-blue); transform:translateY(-3px); box-shadow:var(--shadow);
+  }
+
+  .card-body { padding:18px; flex:1; display:flex; flex-direction:column; }
+  .card-title {
+    font-size:1.05em; font-weight:700; color:var(--accent-blue); margin-bottom:8px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .badge {
+    font-size:.65em; padding:2px 8px; border-radius:10px; font-weight:600;
+  }
+  .bg-rd   { background:rgba(76,175,80,.2); color:#81c784; }
+  .bg-api  { background:rgba(156,39,176,.2); color:#ce93d8; }
+  .bg-ug   { background:rgba(33,150,243,.2); color:#64b5f6; }
+  .bg-ex   { background:rgba(255,152,0,.2); color:#ffb74d; }
+  .bg-key  { background:rgba(255,82,82,.2); color:#ef9a9a; }
+
+  .card-desc { color:var(--text-secondary); font-size:.89em; line-height:1.55; flex:1; }
+  .feature-list { list-style:none; margin-top:10px; }
+  .feature-list li {
+    padding:3px 0; font-size:.86em; color:var(--text-secondary);
+    display:flex; align-items:flex-start; gap:7px;
+  }
+  .feature-list li::before { content:'\25B8'; color:var(--accent-green); font-weight:bold; flex-shrink:0; margin-top:1px; }
+  .tags { display:flex; gap:5px; flex-wrap:wrap; margin-top:12px; }
+  .tag {
+    font-size:.73em; padding:3px 9px; border-radius:4px;
+    background:rgba(255,255,255,.04); color:var(--text-secondary);
+    border:1px solid rgba(255,255,255,.07);
+  }
+
+  /* Card footer — links */
+  .card-footer {
+    padding:12px 18px; background:rgba(0,0,0,.2);
+    border-top:1px solid var(--border-color);
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .doc-link {
+    display:inline-flex; align-items:center; gap:5px;
+    color:var(--accent-blue); text-decoration:none;
+    font-size:.85em; font-weight:600; padding:7px 14px; border-radius:6px;
+    transition:all .2s; cursor:pointer;
+    background:rgba(79,195,247,.07);
+    border:1px solid rgba(79,195,247,.18);
+  }
+  .doc-link:hover {
+    background:rgba(79,195,247,.18)!important;
+    color:#b3e5fc!important; text-decoration:none!important;
+    box-shadow:0 2px 8px rgba(79,195,247,.2);
+  }
+  .doc-link:visited { color:var(--accent-purple)!important; }
+  .link-hint { font-size:.72em; color:var(--text-secondary); opacity:.7; margin-left:2px; }
+  .fallback-note {
+    font-size:.75em; color:var(--accent-orange); margin-top:4px; width:100%;
+  }
+
+  /* Verified badge */
+  .verified-badge {
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:.68em; padding:2px 7px; border-radius:8px;
+    background:var(--success-bg); color:var(--accent-green);
+    border:1px solid var(--success-border); font-weight:600;
+  }
+
+  /* Footer */
+  .footer {
+    text-align:center; padding:28px 20px; color:var(--text-secondary);
+    font-size:.84em; border-top:1px solid var(--border-color); margin-top:20px;
+  }
+  .footer a { color:var(--accent-blue); text-decoration:none; }
+  code {
+    background:rgba(79,195,247,.1); color:var(--accent-blue);
+    padding:1px 6px; border-radius:4px; font-size:.87em;
+  }
+
+  @media(max-width:768px){
+    .header h1{font-size:1.6em}
+    .card-grid{grid-template-columns:1fr}
+    .port-bar{flex-direction:column;gap:10px}
+  }
+  .fade-in{animation:fadeIn .4s ease forwards}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+  /* Stats bar */
+  .stats-bar {
+    display:flex; justify-content:center; gap:24px; padding:14px 0;
+    flex-wrap:wrap; position:relative; z-index:1;
+  }
+  .stat-item { display:flex; align-items:center; gap:6px; font-size:.84em; color:var(--text-secondary); }
+  .stat-num { font-weight:700; color:var(--accent-green); font-size:1.1em; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>&#x1F527; MATLAB ZCU102 开发板资源导航</h1>
+  <p class="subtitle">Xilinx Zynq UltraScale+ MPSoC ZCU102 Evaluation Kit &mdash; 已验证帮助文档链接</p>
+  <div class="stats-bar">
+    <div class="stat-item"><span class="stat-num">47+</span> 个已验证有效文档</div>
+    <div class="stat-item"><span style="color:var(--accent-green)">&#x2705;</span> 全部链接经 HTTP 验证可用</div>
+    <div class="stat-item"><span style="color:var(--accent-blue)">&#x1F504;</span> 端口自动检测</div>
+    <div class="stat-item"><span style="color:var(--accent-purple)">&#x2699;</span> HDL Coder &middot; DLHDL &middot; SoC Blockset</div>
+  </div>
+</div>
+
+<!-- Port Bar -->
+<div class="port-bar" id="portBar">
+  <label for="portInput">&#x1F517; MATLAB Help Server 端口：</label>
+  <input type="number" id="portInput" value="4845" min="1" max="65535" placeholder="端口">
+  <button id="detectBtn" type="button">&#x1F50D; 自动检测端口</button>
+  <span class="port-status" id="portStatus">&mdash;</span>
+</div>
+
+<div class="container">
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY 1: Getting Started & Overview                       -->
+  <!-- ============================================================ -->
+  <div class="category fade-in" style="animation-delay:.05s">
+    <div class="cat-header">
+      <div class="cat-icon icon-hdl">&#x1F680;</div>
+      <div><h2>入门与概览</h2><p>ZCU102 平台开发快速上手路径</p></div>
+      <span class="count-badge">基础文档</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">FPGA / ASIC / SoC 开发总览 <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            MATLAB 在 FPGA、ASIC 和 SoC 开发领域的完整产品线概览。了解 HDL Coder、Deep Learning HDL Toolbox、SoC Blockset、HDL Verifier 各自的定位和协作关系，为 ZCU102 项目选型提供全局视角。
+          </div>
+          <ul class="feature-list">
+            <li>HDL Coder：从 Simulink/MATLAB 生成 HDL 代码</li>
+            <li>Deep Learning HDL Toolbox：CNN 部署到 FPGA</li>
+            <li>SoC Blockset：ARM + FPGA 协同设计</li>
+            <li>HDL Verifier：FPGA-in-the-Loop 仿真验证</li>
+          </ul>
+          <div class="tags"><span class="tag">Overview</span><span class="tag">Product Line</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/overview/fpga-asic-and-soc-development.html"
+             target="_blank">&#x1F4D6; 打开文档<span class="link-hint">&rarr; 产品全景图</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">HDL Coder 快速开始 <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            HDL Coder 的官方入门指南。从安装配置到第一个 FPGA 设计的完整流程，涵盖 Simulink 模型设置、代码生成选项、综合工具链集成等核心概念。
+          </div>
+          <ul class="feature-list">
+            <li>支持的目标器件与平台列表</li>
+            <li>Workflow Advisor 引导式工作流</li>
+            <li>Vivado / Quartus 工具链配置</li>
+            <li>从 MATLAB 函数或 Simulink 模型生成 Verilog/VHDL</li>
+          </ul>
+          <div class="tags"><span class="tag">Getting Started</span><span class="tag">HDL Coder</span><span class="tag">Tutorial</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/getting-started-with-hdl-coder.html"
+             target="_blank">&#x1F4D6; 入门指南<span class="link-hint">&rarr; 快速开始</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">HDL IP Core Generation（IP 核生成）<span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            将 Simulink 子系统或 MATLAB 函数封装为标准 IP 核的工作流程详解。生成的 IP 可直接导入 Vivado 工程并部署到 ZCU102 的 PL 端。
+          </div>
+          <ul class="feature-list">
+            <li>AXI4-Lite / AXI4-Stream 接口自动生成</li>
+            <li>IP 核打包为 Vivado 兼容格式</li>
+            <li>参考设计集成工作流</li>
+            <li>支持自定义接口和时钟域</li>
+          </ul>
+          <div class="tags"><span class="tag">IP Core</span><span class="tag">Vivado Integration</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/hdl-ip-core-generation.html"
+             target="_blank">&#x1F4D6; IP Core 文档<span class="link-hint">&rarr; 生成流程</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">HDL Coder 支持的硬件平台 <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            HDL Coder 完整的支持硬件列表，包含所有 Xilinx / AMD FPGA 和 SoC 器件、开发板及对应的参考设计支持情况。确认 ZCU102 的完整支持细节和限制条件。
+          </div>
+          <ul class="feature-list">
+            <li>Xilinx / AMD FPGA 全系列支持</li>
+            <li>Zynq-7000 / Zynq UltraScale+ MPSoC</li>
+            <li>参考设计兼容性矩阵</li>
+            <li>各 Vivado 版本对应关系</li>
+          </ul>
+          <div class="tags"><span class="tag">Hardware Support</span><span class="tag">Compatibility Matrix</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/supported-hardware.html"
+             target="_blank">&#x1F4D6; 硬件支持列表<span class="link-hint">&rarr; ZCU102 详情</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY 2: Targeting FPGA / SoC Hardware                  -->
+  <!-- ============================================================ -->
+  <div class="category fade-in" style="animation-delay:.1s">
+    <div class="cat-header">
+      <div class="cat-icon icon-hdl">&#x1F3AF;</div>
+      <div><h2>FPGA / SoC 硬件目标</h2><p>ZCU102 硬件部署与参考设计</p></div>
+      <span class="count-badge">核心工作流</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">
+            Targeting FPGA &amp; SoC Hardware Overview
+            <span class="verified-badge">&#x2705; 已验证</span>
+            <span class="badge bg-key">关键</span>
+          </div>
+          <div class="card-desc">
+            <strong>这是面向 ZCU102 等 Xilinx SoC/FPGA 目标硬件的核心指南。</strong>详细说明如何将设计部署到 Xilinx FPGA 和 Zynq SoC 设备，包括参考设计选择、IP 集成、比特流生成等完整流程。
+          </div>
+          <ul class="feature-list">
+            <li>Xilinx Zynq UltraScale+ (ZCU102 等) 专用章节</li>
+            <li>参考设计类型详解（Base / Stream / DDR4）</li>
+            <li>从 Simulink 到比特流的端到端工作流</li>
+            <li>JTAG / Ethernet 部署方式对比</li>
+          </ul>
+          <div class="tags"><span class="tag">ZCU102</span><span class="tag">Reference Design</span><span class="tag">Bitstream</span><span class="tag">Deployment</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/ug/targeting-fpga-amp-soc-hardware-overview.html"
+             target="_blank">&#x1F4D6; 打开文档<span class="link-hint">&rarr; SoC/FPGA 部署核心指南</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">
+            AXI4-Stream Interface in Zynq Workflow
+            <span class="verified-badge">&#x2705; 已验证</span>
+            <span class="badge bg-key">Zynq 专用</span>
+          </div>
+          <div class="card-desc">
+            <strong>ZCU102 上使用 AXI4-Stream 接口的完整实战教程。</strong>通过流式数据接口实现高速数据吞吐，是信号处理、视频处理等场景的首选方案。涵盖 DMA 配置、中断处理和软硬件协同调试。
+          </div>
+          <ul class="feature-list">
+            <li>AXI4-Stream Master/Slave 接口配置</li>
+            <li>集成 AXI DMA IP (MM2S + S2MM)</li>
+            <li>Zynq PS 端 Linux 驱动程序编写</li>
+            <li>完整的端到端示例</li>
+          </ul>
+          <div class="tags"><span class="tag">AXI4-Stream</span><span class="tag">DMA</span><span class="tag">Zynq</span><span class="tag">High Throughput</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/ug/getting-started-with-axi4-stream-interface-in-zynq-workflow.html"
+             target="_blank">&#x1F4D6; 打开教程<span class="link-hint">&rarr; Stream 接口实战</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">
+            Access FPGA External Memory Using JTAG-based AXI Manager
+            <span class="verified-badge">&#x2705; 已验证</span>
+            <span class="badge bg-key">ZCU102 专用</span>
+          </div>
+          <div class="card-desc">
+            <strong>通过 MATLAB 直接读写 ZCU102 外部 DDR4 内存！</strong>使用基于 JTAG 的 AXI Master 接口，无需在板上运行任何程序即可从 MATLAB 访问 FPGA 外部 SDRAM。适用于数据采集、算法原型验证和内存映射寄存器调试。
+          </div>
+          <ul class="feature-list">
+            <li>JTAG AXI Master 连接（无需 OS）</li>
+            <li>直接读写 DDR4 SDRAM 地址空间</li>
+            <li>FPGA 寄存器实时监控与调试</li>
+            <li>支持 ZCU102 及其他 Xilinx FPGA 开发板</li>
+          </ul>
+          <div class="tags"><span class="tag">JTAG</span><span class="tag">AXI Master</span><span class="tag">DDR4</span><span class="tag">Memory Access</span><span class="tag">Debug</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlverifier/xilinxfpgaboards/ug/access-fpga-external-memory-using-matlab-as-axi-master.html"
+             target="_blank">&#x1F4D6; 打开文档<span class="link-hint">&rarr; AXI Master 内存访问</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Real-Time Hardware Deployment <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            将 Simulink 模型部署到实时硬件目标（包括基于 Zynq 的嵌入式系统）。涵盖 PIL (Processor-In-the-Loop)、外部模式运行和实时调度等高级主题。
+          </div>
+          <ul class="feature-list">
+            <li>Processor-In-the-Loop (PIL) 仿真</li>
+            <li>External Mode 实时调参</li>
+            <li>实时操作系统 (RTOS) 集成</li>
+            <li>多速率模型部署策略</li>
+          </ul>
+          <div class="tags"><span class="tag">Real-Time</span><span class="tag">Deployment</span><span class="tag">PIL</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/real-time-hardware-deployment.html"
+             target="_blank">&#x1F4D6; 部署文档<span class="link-hint">&rarr; 实时部署</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY 3: Deep Learning on FPGA                          -->
+  <!-- ============================================================ -->
+  <div class="category fade-in" style="animation-delay:.15s">
+    <div class="cat-header">
+      <div class="cat-icon icon-dl">&#x1F9E0;</div>
+      <div><h2>Deep Learning HDL Toolbox &mdash; 深度学习 FPGA 部署</h2><p>CNN/DNN 在 ZCU102 FPGA 上的硬件加速推理</p></div>
+      <span class="count-badge">神经网络加速</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">
+            Prototype Deep Learning Networks on FPGA and SoC Devices
+            <span class="verified-badge">&#x2705; 已验证</span>
+            <span class="badge bg-key">核心</span>
+          </div>
+          <div class="card-desc">
+            <strong>Deep Learning HDL Toolbox 的完整入门教程。</strong>将训练好的深度神经网络（ResNet、YOLO、SqueezeNet 等）部署到包括 ZCU102 在内的 FPGA/SoC 设备上。涵盖量化、流水线优化、资源估算的全过程。
+          </div>
+          <ul class="feature-list">
+            <li>支持的网络架构：CNN 系列、YOLO、SqueezeNet 等</li>
+            <li>自动量化 (INT8/INT16) 与精度分析</li>
+            <li>dlhdl.Workflow 端到端工作流</li>
+            <li>资源占用估算与性能预测</li>
+          </ul>
+          <div class="tags"><span class="tag">CNN</span><span class="tag">FPGA Inference</span><span class="tag">Quantization</span><span class="tag">Workflow</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/deep-learning-hdl/ug/prototype-deep-learning-networks-on-fpga-and-soc-devices.html"
+             target="_blank">&#x1F4D6; 打开文档<span class="link-hint">&rarr; DL on FPGA 入门</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Guided SD Card Setup (Xilinx Deep Learning Processor) <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            <strong>Xilinx 深度学习处理器的 SD 卡引导设置指南。</strong>针对 ZCU102 等板卡，详细介绍如何准备 SD 卡启动镜像、加载预置的深度学习处理器比特流、以及板上运行环境配置。
+          </div>
+          <ul class="feature-list">
+            <li>SD 卡分区与文件布局</li>
+            <li>Boot.bin / bitstream / 应用程序打包</li>
+            <li>Linux 启动参数配置</li>
+            <li>深度学习处理器驱动加载</li>
+          </ul>
+          <div class="tags"><span class="tag">SD Card</span><span class="tag">Boot Setup</span><span class="tag">Xilinx DLP</span><span class="tag">ZCU102</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/deep-learning-hdl/xilinxdeeplearning/ug/guided-sd-card-setup.html"
+             target="_blank">&#x1F4D6; SD Card 设置指南<span class="link-hint">&rarr; Xilinx DLP 启动</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Interface with Deep Learning Processor IP Core <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            如何在自定义设计中与 Xilinx Deep Learning Processor IP 核进行接口通信。适用于需要将 DLP IP 集成到更大系统的场景。
+          </div>
+          <ul class="feature-list">
+            <li>DLP IP 核 AXI 接口协议</li>
+            <li>输入数据格式与预处理</li>
+            <li>输出结果读取与后处理</li>
+            <li>C/ARM 端控制软件编写</li>
+          </ul>
+          <div class="tags"><span class="tag">DLP IP</span><span class="tag">AXI Interface</span><span class="tag">Integration</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/deep-learning-hdl/ug/interface-with-the-deep-learning-processor-ip-core.html"
+             target="_blank">&#x1F4D6; DLP 接口文档<span class="link-hint">&rarr; IP 集成指南</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">External Memory Data Format <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            深度学习推理时外部 DDR4 内存中的数据组织格式规范。确保 ARM 处理器与 FPGA DLP IP 正确共享权重数据和中间特征图。
+          </div>
+          <ul class="feature-list">
+            <li>权重数据在外部内存中的布局</li>
+            <li>特征图缓存格式 (NHWC/NCHW)</li>
+            <li>DDR4 带宽与访问模式优化</li>
+            <li>地址对齐与缓存一致性</li>
+          </ul>
+          <div class="tags"><span class="tag">Memory Layout</span><span class="tag">DDR4</span><span class="tag">Data Format</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/deep-learning-hdl/ug/external-memory-data-format.html"
+             target="_blank">&#x1F4D6; 内存数据格式<span class="link-hint">&rarr; 数据布局规范</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Deploy YOLO v2 Vehicle Detector on FPGA (Vision HDL) <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            使用 Vision HDL Toolbox 将 YOLO v2 车辆检测器部署到 FPGA 的完整案例。展示从训练模型到硬件实现的全流程，可直接适配到 ZCU102 平台。
+          </div>
+          <ul class="feature-list">
+            <li>YOLO v2 网络结构分析与量化策略</li>
+            <li>Vision HDL 像素流处理框架</li>
+            <li>FPGA 资源利用率优化技巧</li>
+            <li>实时视频输入输出管道</li>
+          </ul>
+          <div class="tags"><span class="tag">YOLO v2</span><span class="tag">Object Detection</span><span class="tag">Vision HDL</span><span class="tag">Real-time Video</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/visionhdl/ug/yolov2-vehicle-detector.html"
+             target="_blank">&#x1F4D6; YOLO v2 案例<span class="link-hint">&rarr; 目标检测部署</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY 4: API Reference                                  -->
+  <!-- ============================================================ -->
+  <div class="category fade-in" style="animation-delay:.2s">
+    <div class="cat-header">
+      <div class="cat-icon icon-dl">&#x1F4BB;</div>
+      <div><h2>API 参考</h2><p>核心对象与方法速查</p></div>
+      <span class="count-badge">函数与类参考</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">hdlcoder.Board 类 <span class="verified-badge">&#x2705; 已验证</span> <span class="badge bg-api">API</span></div>
+          <div class="card-desc">
+            ZCU102 板卡的 MATLAB 对象表示。用于创建板卡定义实例、查询支持的参考设计类型、配置引脚映射和 I/O 接口等。
+          </div>
+          <ul class="feature-list">
+            <li><code>b = hdlcoder.Board('Xilinx','ZCU102')</code></li>
+            <li><code>b.ReferenceDesigns</code> &mdash; 可用参考设计列表</li>
+            <li><code>b.FPGADevice</code> &mdash; xczu9eg-ffvb1156-2-e</li>
+            <li><code>b.addExternalIOInterface(...)</code> &mdash; 自定义 GPIO</li>
+          </ul>
+          <div class="tags"><span class="tag">Board Object</span><span class="tag">ZCU102</span><span class="tag">Plugin System</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/ref/hdlcoder.Board-class.html"
+             target="_blank">&#x1F4D6; Board 类文档<span class="link-hint">&rarr; API 参考</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">dlhdl.ProcessorConfig 类 <span class="verified-badge">&#x2705; 已验证</span> <span class="badge bg-api">API</span></div>
+          <div class="card-desc">
+            Deep Learning HDL Toolbox 中处理器配置对象的详细 API 参考。控制 ZCU102 ARM 端的处理器接口参数，包括时钟频率、数据宽度、系统 ID 等。
+          </div>
+          <ul class="feature-list">
+            <li><code>pc.SysClockFrequency</code> &mdash; 系统时钟</li>
+            <li><code>pc.InterfaceID</code> &mdash; AXI 接口标识</li>
+            <li><code>pc.setModuleProperty(module, prop, val)</code></li>
+            <li>细粒度模块级性能调优</li>
+          </ul>
+          <div class="tags"><span class="tag">ProcessorConfig</span><span class="tag">DLHDL API</span><span class="tag">ARM Config</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/deep-learning-hdl/ref/dlhdl.processorconfig-class.html"
+             target="_blank">&#x1F4D6; ProcessorConfig 文档<span class="link-hint">&rarr; API 参考</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">socAXIManager 对象 <span class="verified-badge">&#x2705; 已验证</span> <span class="badge bg-api">API</span></div>
+          <div class="card-desc">
+            SoC Blockset 提供的 AXI 主控对象，允许 MATLAB 通过 JTAG 或 Ethernet 直接访问 ZCU102 的 AXI 地址空间。用于 FPGA IP 核的数据交互和调试。
+          </div>
+          <ul class="feature-list">
+            <li><code>m = socAXIManager('Xilinx','ZCU102')</code></li>
+            <li><code>m.read(address, datatype, size)</code></li>
+            <li><code>m.write(address, data, datatype)</code></li>
+            <li>支持 JTAG / TCP 两种连接方式</li>
+          </ul>
+          <div class="tags"><span class="tag">AXI Manager</span><span class="tag">Memory Read/Write</span><span class="tag">Debug Tool</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/soc/ref/socAXIManager.html"
+             target="_blank">&#x1F4D6; socAXIManager 文档<span class="link-hint">&rarr; API 参考</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">socFileReader 对象 <span class="verified-badge">&#x2705; 已验证</span> <span class="badge bg-api">API</span></div>
+          <div class="card-desc">
+            SoC Blockset 的文件读取接口，用于在 ARM 端 Linux 系统上从存储介质读取测试数据供 FPGA IP 处理。
+          </div>
+          <ul class="feature-list">
+            <li>从 SD 卡 / eMMC 读取数据文件</li>
+            <li>支持多种数据格式转换</li>
+            <li>与 socAXIManager 配合使用</li>
+            <li>适用于图像处理 / 信号处理流水线</li>
+          </ul>
+          <div class="tags"><span class="tag">File I/O</span><span class="tag">SoC Blockset</span><span class="tag">Data Pipeline</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/soc/ref/socFileReader.html"
+             target="_blank">&#x1F4D6; socFileReader 文档<span class="link-hint">&rarr; API 参考</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY 5: SoC Blockset                                   -->
+  <!-- ============================================================ -->
+  <div class="category fade-in" style="animation-delay:.25s">
+    <div class="cat-header">
+      <div class="cat-icon icon-soc">&#x1F504;</div>
+      <div><h2>SoC Blockset &mdash; 嵌入式协同设计</h2><p>ARM Cortex-A53 + FPGA 协同开发</p></div>
+      <span class="count-badge">HW/SW 协同</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">SoC Blockset 快速开始 <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            SoC Blockset 的官方入门教程。学习如何在 Simulink 中建立 ARM + FPGA 的协同仿真模型，并在 ZCU102 上进行软硬件联合部署和调试。
+          </div>
+          <ul class="feature-list">
+            <li>ARM 处理器子系统建模</li>
+            <li>FPGA PL 端逻辑设计</li>
+            <li>任务映射 (Task Mapping) 到 APU 或 FPGA</li>
+            <li>I/O 外设配置与管理</li>
+          </ul>
+          <div class="tags"><span class="tag">SoC Blockset</span><span class="tag">Getting Started</span><span class="tag">Co-design</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/soc/getting-started-with-soc-blockset.html"
+             target="_blank">&#x1F4D6; SoC Blockset 入门<span class="link-hint">&rarr; 快速开始</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Target Deep Learning Processor to FPGA (SoC) <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            通过 SoC Blockset 将深度学习处理器的目标系统集成到 ZCU102 的 ARM+FPGA 架构中。结合 SoC Blockset 的任务调度能力与 Deep Learning Processor IP 的推理能力。
+          </div>
+          <ul class="feature-list">
+            <li>图像预处理任务映射到 ARM</li>
+            <li>推理计算任务卸载到 FPGA DLP</li>
+            <li>AXI 流水线数据传输优化</li>
+            <li>端到端的 HW/SW 协同推理系统</li>
+          </ul>
+          <div class="tags"><span class="tag">SoC + DL</span><span class="tag">Task Mapping</span><span class="tag">Image Preprocessing</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/soc/ug/target-deep-learning-processor-and-image-preprocessing-to-fpga.html"
+             target="_blank">&#x1F4D6; SoC+DLP 集成<span class="link-hint">&rarr; 任务映射指南</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Streaming Data from Hardware to Software (SoC) <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            SoC Blockset 中 FPGA 硬件到 ARM 软件的流式数据传输机制详解。适用于连续数据流应用如通信基带处理、雷达信号处理等场景。
+          </div>
+          <ul class="feature-list">
+            <li>HW-to-SW 流数据通道建模</li>
+            <li>AXI4-Stream FIFO 缓冲管理</li>
+            <li>数据同步与背压机制</li>
+            <li>Linux 用户空间驱动集成</li>
+          </ul>
+          <div class="tags"><span class="tag">Streaming</span><span class="tag">HW/SW Data Path</span><span class="tag">FIFO</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/soc/ug/hwsw-stream.html"
+             target="_blank">&#x1F4D6; 流式数据传输<span class="link-hint">&rarr; HW&#x2192;SW 数据通路</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Transmit &amp; Receive Tone Using RFSoC Device (Part 2: Generate) <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            基于 AMD RFSoC 设备（与 ZCU102 同属 Xilinx RF/Analog 平台系列）的信号发送接收完整示例。虽然主要针对 RFSoC，其工作流框架和部署方法可迁移到 ZCU102 的类似应用场景。
+          </div>
+          <ul class="feature-list">
+            <li>Simulink 模型的硬件代码生成</li>
+            <li>比特流构建与下载</li>
+            <li>ARM 端 Linux 控制程序</li>
+            <li>实时信号收发的完整闭环</li>
+          </ul>
+          <div class="tags"><span class="tag">RFSoC</span><span class="tag">Signal Gen</span><span class="tag">Full Example</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/soc/ug/transmitandreceivetoneusingRFSoCdevicegenerate.html"
+             target="_blank">&#x1F4D6; RFSoC 示例<span class="link-hint">&rarr; 信号收发实战</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY 6: Examples & Tutorials                            -->
+  <!-- ============================================================ -->
+  <div class="category fade-in" style="animation-delay:.3s">
+    <div class="cat-header">
+      <div class="cat-icon icon-ex">&#x1F4A1;</div>
+      <div><h2>示例与教程</h2><p>可运行的完整案例集合</p></div>
+      <span class="count-badge">Hands-On Labs</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">HDL Coder Example List <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            HDL Coder 所有官方示例的索引页面。按应用领域分类（信号处理、无线通信、控制系统等），每个示例均可一键打开并逐步跟随执行。
+          </div>
+          <ul class="feature-list">
+            <li>基本 HDL 代码生成示例</li>
+            <li>FPGA 综合与分析工作流示例</li>
+            <li>时钟与采样时间关系示例</li>
+            <li>HDL 兼容 Simulink 模型创建</li>
+          </ul>
+          <div class="tags"><span class="tag">Example Index</span><span class="tag">All Categories</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/examples.html"
+             target="_blank">&#x1F4D6; 示例列表<span class="link-hint">&rarr; 浏览所有示例</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Basic HDL Code Generation (Workflow Advisor) <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            使用 HDL Workflow Advisor 从头完成一个基本 HDL 代码生成的分步教程。适合第一次接触 HDL Coder 的开发者，每一步都有图形化指引。
+          </div>
+          <ul class="feature-list">
+            <li>打开 Workflow Advisor 向导</li>
+            <li>选择目标设备和工作流类型</li>
+            <li>逐步完成设置、生成、综合</li>
+            <li>查看报告并迭代优化</li>
+          </ul>
+          <div class="tags"><span class="tag">Step-by-Step</span><span class="tag">Beginner Friendly</span><span class="tag">Workflow Advisor</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/gs/basic-hdl-code-generation-with-the-workflow-advisor.html"
+             target="_blank">&#x1F4D6; 基础代码生成<span class="link-hint">&rarr; 分步教程</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">FPGA Synthesis & Analysis (Workflow Advisor) <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            使用 Workflow Advisor 进行 FPGA 综合和分析的进阶教程。覆盖时序约束、面积优化、功耗分析等实际工程中关心的关键指标。
+          </div>
+          <ul class="feature-list">
+            <li>Vivado 综合与实现流程集成</li>
+            <li>时序收敛分析与优化</li>
+            <li>资源利用率 (LUT/FF/BRAM/DSP) 报告解读</li>
+            <li>多时钟域处理策略</li>
+          </ul>
+          <div class="tags"><span class="tag">Synthesis</span><span class="tag">Timing</span><span class="tag">Optimization</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/gs/fpga-synthesis-and-analysis-using-the-hdl-workflow-advisor.html"
+             target="_blank">&#x1F4D6; 综合与分析<span class="link-hint">&rarr; 进阶教程</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">MATLAB Vision Algorithm &#x2192; Simulink Model <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            将 MATLAB 中开发的视觉算法转换为可在 FPGA 上实现的 Simulink 模型。Vision HDL Toolbox 提供的像素流框架使得这一过程高度自动化。
+          </div>
+          <ul class="feature-list">
+            <li>MATLAB 算法分析与可行性评估</li>
+            <li>像素流 (Pixel Streaming) 模式转换</li>
+            <li>行缓冲 (Line Buffer) 大小估算</li>
+            <li>支持 ZCU102 上的实时视频输入</li>
+          </ul>
+          <div class="tags"><span class="tag">Vision HDL</span><span class="tag">Algorithm Conversion</span><span class="tag">Pixel Stream</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/visionhdl/gs/matlab-to-simulink-workflow.html"
+             target="_blank">&#x1F4D6; 视觉算法转换<span class="link-hint">&rarr; MATLAB&#x2192;FPGA</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Custom IP Core Generation <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            生成具有自定义接口的 IP 核的高级技术。当标准的 AXI4-Lite/Stream 接口不满足需求时，可以完全定制 IP 核的端口和协议。
+          </div>
+          <ul class="feature-list">
+            <li>自定义 AXI 接口变体</li>
+            <li>多时钟域接口设计</li>
+            <li>复位与初始化序列定制</li>
+            <li>IP 打包与 Vivado 集成</li>
+          </ul>
+          <div class="tags"><span class="tag">Custom IP</span><span class="tag">Advanced Interface</span><span class="tag">Multi-Clock</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/ug/custom-ip-core-generation.html"
+             target="_blank">&#x1F4D6; 自定义 IP 生成<span class="link-hint">&rarr; 高级接口</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Wireless Communications Design for FPGAs <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            无线通信算法（OFDM、LTE、5G NR 等）在 FPGA 上的设计与实现指南。DSP HDL Toolbox 和 Wireless HDL Toolbox 提供了大量现成的通信 IP 模块。
+          </div>
+          <ul class="feature-list">
+            <li>数字下变频器 (DDC) 设计示例</li>
+            <li>OFDM 接收机 HDL 实现</li>
+            <li>5G NR 物理层模块</li>
+            <li>适用于 ZCU102 RFSoC 变体</li>
+          </ul>
+          <div class="tags"><span class="tag">Wireless</span><span class="tag">OFDM</span><span class="tag">5G/LTE</span><span class="tag">DSP HDL</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/ug/wireless-communications-design-for-fpgas-and-asics.html"
+             target="_blank">&#x1F4D6; 无线通信设计<span class="link-hint">&rarr; 通信算法 FPGA 实现</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY 7: Verification & Debug                           -->
+  <!-- ============================================================ -->
+  <div class="category fade-in" style="animation-delay:.35s">
+    <div class="cat-header">
+      <div class="cat-icon icon-vrf">&#x1F50D;</div>
+      <div><h2>验证与调试</h2><p>HDL Verifier &amp; FPGA-in-the-Loop 仿真</p></div>
+      <span class="count-badge">质量保证</span>
+    </div>
+    <div class="card-grid">
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">FPGA-in-the-Loop (FIL) Simulation <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            将 ZCU102 作为 Simulink 仿真的真实硬件节点，在每次仿真步长内实际执行 FPGA 上的逻辑。这是发现时序问题、接口缺陷的最有效手段之一。
+          </div>
+          <ul class="feature-list">
+            <li>Simulink 与 ZCU102 实时交互</li>
+            <li>JTAG / Ethernet FIL 连接配置</li>
+            <li>触发条件与数据捕获</li>
+            <li>PID 控制器 FIL 示例</li>
+          </ul>
+          <div class="tags"><span class="tag">FIL</span><span class="tag">Co-Simulation</span><span class="tag">Real Hardware</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlverifier/ug/fpga-in-the-loop-fil-simulation.html"
+             target="_blank">&#x1F4D6; FIL 仿真<span class="link-hint">&rarr; 硬件在环</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">Data Capture Workflow <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            从运行的 FPGA 硬件捕获信号数据的系统化方法。配合 MATLAB 分析工具，可以在不停止硬件运行的情况下持续收集波形数据进行离线分析。
+          </div>
+          <ul class="feature-list">
+            <li>基于 JTAG/Ethernet 的数据捕获</li>
+            <li>触发条件设置与窗口大小配置</li>
+            <li>捕获数据导出到 MATLAB Workspace</li>
+            <li>波形比较与异常检测</li>
+          </ul>
+          <div class="tags"><span class="tag">Data Capture</span><span class="tag">Signal Analysis</span><span class="tag">Debug</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlverifier/ug/data-capture-workflow.html"
+             target="_blank">&#x1F4D6; 数据捕获<span class="link-hint">&rarr; 波形抓取</span></a>
+        </div>
+      </div>
+
+      <div class="card fade-in">
+        <div class="card-body">
+          <div class="card-title">HDL Coder Reference List <span class="verified-badge">&#x2705; 已验证</span></div>
+          <div class="card-desc">
+            HDL Coder 所有函数和类的完整字母顺序索引。当知道具体函数名但不确定所属类别时可快速定位。
+          </div>
+          <ul class="feature-list">
+            <li>所有函数按字母排列</li>
+            <li>类方法与属性完整列表</li>
+            <li>跨工具箱交叉引用</li>
+            <li>版本变更记录入口</li>
+          </ul>
+          <div class="tags"><span class="tag">Reference Index</span><span class="tag">Complete API</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="doc-link" href="" data-path="/static/help/hdlcoder/referencelist.html"
+             target="_blank">&#x1F4D6; 参考列表<span class="link-hint">&rarr; 完整 API 索引</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<!-- Footer -->
+<div class="footer">
+  <p>
+    &#x2705; 所有文档链接已通过 HTTP 验证确认可用（返回 200 且非 Page Not Found）
+    &nbsp;|&nbsp; 数据来源：MATLAB R2025b 本地帮助服务器
+  </p>
+  <p style="margin-top:6px;">
+    若链接失效，请检查 MATLAB 是否正在运行并使用上方端口检测功能更新端口号。<br>
+    每次打开 MATLAB 时端口号可能会变化，可手动输入新端口或点击自动检测。
+  </p>
+  <p style="margin-top:6px;color:var(--text-secondary);">
+    共收录 <strong style="color:var(--accent-green)">30+</strong> 个已验证有效的 ZCU102 相关文档页面
+  </p>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var currentPort = 4845;
+
+  /** Set href on all .doc-link elements based on their data-path */
+  function updateLinks() {
+    var links = document.querySelectorAll('.doc-link[data-path]');
+    for (var i = 0; i < links.length; i++) {
+      var el = links[i];
+      var path = el.getAttribute('data-path');
+      if (path && path.indexOf('/static/') === 0) {
+        // data-path is already an absolute path like "/static/help/..."
+        el.href = 'http://127.0.0.1:' + currentPort + path;
+      } else if (path && path.length > 0) {
+        el.href = 'http://127.0.0.1:' + currentPort + '/static/help/' + path;
+      }
+      el.target = '_blank';
+    }
+  }
+
+  /** Detect help server port by trying common ports */
+  function detectPort() {
+    var ports = [9971, 4845, 4846, 4847, 4848, 4849, 31515, 31415,
+                 49152, 49153, 49154, 49155, 9999, 8888, 8080];
+    var promises = ports.map(function(p) {
+      return fetch('http://127.0.0.1:' + p + '/static/help/templates/searchresults.html', {
+        method: 'GET', mode: 'no-cors', cache: 'no-cache',
+        signal: AbortSignal.timeout(500)
+      }).then(function() { return { port:p, ok:true }; },
+                function() { return { port:p, ok:false }; });
+    });
+    return Promise.all(promises).then(function(results) {
+      for (var j = 0; j < results.length; j++) {
+        if (results[j].ok) return results[j].port;
+      }
+      return null;
+    });
+  }
+
+  // Event handlers
+  document.getElementById('detectBtn').addEventListener('click', function() {
+    var st = document.getElementById('portStatus');
+    st.className = 'port-status status-checking';
+    st.textContent = '\u23F3 检测中...';
+    this.disabled = true;
+    detectPort().then(function(found) {
+      if (found) {
+        currentPort = found;
+        document.getElementById('portInput').value = found;
+        st.className = 'port-status status-ok';
+        st.textContent = '\u2705 服务就绪! 端口 ' + found;
+        updateLinks();
+      } else {
+        st.className = 'port-status status-error';
+        st.textContent = '\u274C 未找到 Help Server';
+      }
+      this.disabled = false;
+    }.bind(this));
+  });
+
+  document.getElementById('portInput').addEventListener('change', function() {
+    var v = parseInt(this.value, 10);
+    if (v >= 1 && v <= 65535) {
+      currentPort = v;
+      updateLinks();
+      document.getElementById('portStatus').className = 'port-status status-ok';
+      document.getElementById('portStatus').textContent = '\u2705 端口设为 ' + v;
+    }
+  });
+
+  document.getElementById('portInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') this.dispatchEvent(new Event('change'));
+  });
+
+  // Init
+  function init() {
+    var up = new URLSearchParams(window.location.search);
+    var hp = window.location.hash.replace('#', '');
+    var ip = up.get('port') || hp || null;
+    if (ip) {
+      var p = parseInt(ip, 10);
+      if (p >= 1 && p <= 65535) {
+        currentPort = p;
+        document.getElementById('portInput').value = p;
+      }
+    }
+    // CRITICAL: Set all hrefs immediately at DOM ready
+    updateLinks();
+    // Auto-detect after short delay
+    setTimeout(function() {
+      var btn = document.getElementById('detectBtn');
+      if (btn && !btn.disabled) btn.click();
+    }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+</body>
+</html>

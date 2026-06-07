@@ -1,0 +1,15 @@
+[submodule "projects/vitis-ai-zcu102-tutorial"]
+	path = projects/vitis-ai-zcu102-tutorial
+	url = https://github.com/al3monni/MNIST_CIFAR10_classification_tf2.git
+[submodule "projects/zcu102-dpu-trd"]
+	path = projects/zcu102-dpu-trd
+	url = https://github.com/Xilinx/Vitis-AI.git
+[submodule "projects/zcu102-petalinux-bsp"]
+	path = projects/zcu102-petalinux-bsp
+	url = https://github.com/Xilinx/embeddedsw.git
+[submodule "projects/zcu102-pynq"]
+	path = projects/zcu102-pynq
+	url = https://github.com/Xilinx/PYNQ.git
+[submodule "projects/zcu102-vitis-platform"]
+	path = projects/zcu102-vitis-platform
+	url = https://github.com/Xilinx/Vitis_Embedded_Platform_Source.git
